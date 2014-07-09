@@ -1,0 +1,386 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Keboola Connection Server",
+    "Parameters": {
+        "InstanceType": {
+            "Description": "WebServer EC2 instance type",
+            "Type": "String",
+            "Default": "t1.micro",
+            "AllowedValues": [ "t1.micro", "m1.small", "m1.medium", "m3.medium", "m3.large", "m1.large", "m1.xlarge", "m3.xlarge", "m3.2xlarge", "m2.xlarge", "m2.2xlarge", "m2.4xlarge", "c1.medium", "c1.xlarge", "cc1.4xlarge", "cc2.8xlarge", "cg1.4xlarge", "hi1.4xlarge", "hs1.8xlarge"],
+            "ConstraintDescription": "must be a valid EC2 instance type."
+        },
+        "SecurityGroupVpcId": {
+            "Description": "Security group id in VPC",
+            "Type": "String",
+            "MinLength": 2,
+            "MaxLength": 255,
+            "Default": "sg-8f9c8aed"
+        },
+        "Zone": {
+            "Description": "Run instance in zone A or B",
+            "Type": "String",
+            "Default": "A",
+            "AllowedValues": ["A", "B"]
+        },
+        "PapertrailPort": {
+            "Description": "Papertrail port number",
+            "Type": "Number",
+            "Default": 49730
+        },
+        "KeyName": {
+            "Description": "Name of an existing EC2 KeyPair to enable SSH access to the web server",
+            "Type": "String",
+            "Default": "Martin",
+            "MinLength": 2,
+            "MaxLength": 255
+        },
+        "NewRelicLicenseKey": {
+            "Description": "New Relic license key",
+            "Type": "String",
+            "MinLength": 2,
+            "MaxLength": 255
+        },
+        "SendgridName": {
+            "Description": "Sendgrid user name",
+            "Default": "Keboola_Centrum",
+            "Type": "String",
+            "MinLength": 2,
+            "MaxLength": 255
+        },
+        "SendgridPassword": {
+            "Description": "Sendgrid password",
+            "Type": "String",
+            "MinLength": 2,
+            "MaxLength": 255
+        }
+    },
+    "Mappings": {
+        "AWSInstanceType2Arch": {
+            "t1.micro": {
+                "Arch": "PV64"
+            },
+            "m1.small": {
+                "Arch": "PV64"
+            },
+            "m1.medium": {
+                "Arch": "PV64"
+            },
+            "m3.medium": {
+                "Arch": "PV64"
+            },
+            "m3.large": {
+                "Arch": "PV64"
+            },
+            "m1.large": {
+                "Arch": "PV64"
+            },
+            "m1.xlarge": {
+                "Arch": "PV64"
+            },
+            "m3.xlarge": {
+                "Arch": "PV64"
+            },
+            "m3.2xlarge": {
+                "Arch": "PV64"
+            },
+            "m2.xlarge": {
+                "Arch": "PV64"
+            },
+            "m2.2xlarge": {
+                "Arch": "PV64"
+            },
+            "m2.4xlarge": {
+                "Arch": "PV64"
+            },
+            "c1.medium": {
+                "Arch": "PV64"
+            },
+            "c1.xlarge": {
+                "Arch": "PV64"
+            },
+            "cc1.4xlarge": {
+                "Arch": "CLU64"
+            },
+            "cc2.8xlarge": {
+                "Arch": "CLU64"
+            },
+            "cg1.4xlarge": {
+                "Arch": "GPU64"
+            },
+            "hi1.4xlarge": {
+                "Arch": "PV64"
+            },
+            "hs1.8xlarge": {
+                "Arch": "PV64"
+            }
+        },
+        "AWSRegionArch2AMI": {
+            "us-east-1": {
+                "PV64": "ami-fb8e9292"
+            }
+        },
+        "ZoneToSubnet": {
+            "A": {
+                "SubnetId": "subnet-9cdbf3e8"
+            },
+            "B": {
+                "SubnetId": "subnet-9cdbf3e8"
+            }
+        }
+    },
+    "Resources": {
+
+        "CfnUser": {
+            "Type": "AWS::IAM::User",
+            "Properties": {
+                "Path": "/",
+                "Policies": [
+                    {
+                        "PolicyName": "root",
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Sid": "Stmt1329997232569xk",
+                                    "Action": [
+                                        "s3:GetObject"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": [
+                                        "arn:aws:s3:::kbc-uis/storage-api-console/*",
+                                        "arn:aws:s3:::keboola-configs/certificates/*",
+                                        "arn:aws:S3:::keboola-configs/deploy-keys/*"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+
+
+        "HostKeys": {
+            "Type": "AWS::IAM::AccessKey",
+            "Properties": {
+                "UserName": {
+                    "Ref": "CfnUser"
+                }
+            }
+        },
+
+        "Ec2Instance": {
+            "Type": "AWS::EC2::Instance",
+            "Metadata": {
+                "AWS::CloudFormation::Init": {
+                    "config": {
+                        "packages": {
+                            "yum": {
+                                "gcc-c++": [],
+                                "ruby-devel": [],
+                                "make": [],
+                                "autoconf": [],
+                                "automake": [],
+                                "rubygems": [],
+                                "ruby-devel": [],
+                                "libcurl-devel": [],
+                                "libxml2-devel": [],
+                                "libxslt-devel": [],
+                                "curl": [],
+                                "git": [],
+                                "xfsprogs": []
+                            }
+                        },
+                        "files": {
+                            "/var/init/node.json": {
+                                "content": {
+                                    "run_list": [ "recipe[keboola-storage-api-console]"],
+                                    "papertrail": {
+                                        "port": {
+                                            "Ref": "PapertrailPort"
+                                        }
+                                    },
+                                    "aws": {
+                                        "aws_access_key_id": {
+                                            "Ref": "HostKeys"
+                                        },
+                                        "aws_secret_access_key": {
+                                            "Fn::GetAtt": [ "HostKeys", "SecretAccessKey" ]
+                                        }
+
+                                    },
+                                    "newrelic": {
+                                        "license": {
+                                            "Ref": "NewRelicLicenseKey"
+                                        }
+                                    },
+                                    "postfix": {
+                                        "main": {
+                                            "smtp_sasl_password_maps": { "Fn::Join" : ["", [
+                                                "static:",
+                                                {
+                                                    "Ref": "SendgridName"
+                                                },
+                                                ":",
+                                                {
+                                                    "Ref": "SendgridPassword"
+                                                }
+                                            ]]}
+                                        }
+                                    }
+                                },
+                                "mode": "000644",
+                                "owner": "root",
+                                "group": "wheel"
+                            },
+                            "/var/init/solo.rb" : {
+                                "content" : { "Fn::Join" : ["\n", [
+                                    "log_level :info",
+                                    "log_location STDOUT",
+                                    "cookbook_path [\"/var/chef/berks-cookbooks\"]"
+                                ]] },
+                                "mode" : "000644",
+                                "owner" : "root",
+                                "group" : "wheel"
+                            },
+                            "/var/init/bootstrap.sh": {
+                                "content": {
+                                    "Fn::Join": ["\n", [
+                                        "curl -# -L -k -o /tmp/cookbook-keboola-storage-api-console-master.tar.gz https://github.com/keboola/cookbook-keboola-storage-api-console/archive/master.tar.gz",
+                                        "curl https://opscode-omnibus-packages.s3.amazonaws.com/el/6/x86_64/chefdk-0.1.0-1.el6.x86_64.rpm > /tmp/chefdk.rpm",
+                                        "rpm -i /tmp/chefdk.rpm",
+                                        "mkdir -p /var/chef/cookbooks/keboola-storage-api-console",
+                                        "tar --strip 1 -C /var/chef/cookbooks/keboola-storage-api-console -xf /tmp/cookbook-keboola-storage-api-console-master.tar.gz",
+                                        "export HOME=/root",
+                                        "cd /var/chef/cookbooks/keboola-storage-api-console && /usr/bin/berks vendor /var/chef/berks-cookbooks/"
+                                    ]]
+                                },
+                                "mode": "000644",
+                                "owner": "root",
+                                "group": "wheel"
+                            }
+                        }
+                    }
+                }
+            },
+            "Properties": {
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Ref": "AWS::StackName"
+                        }
+                    }
+                ],
+                "ImageId": {
+                    "Fn::FindInMap": [ "AWSRegionArch2AMI", {
+                        "Ref": "AWS::Region"
+                    },
+                        {
+                            "Fn::FindInMap": [ "AWSInstanceType2Arch", {
+                                "Ref": "InstanceType"
+                            }, "Arch" ]
+                        } ]
+                },
+                "InstanceType": {
+                    "Ref": "InstanceType"
+                },
+                "NetworkInterfaces": [
+                    {
+                        "GroupSet": [
+                            {
+                                "Ref": "SecurityGroupVpcId"
+                            }
+                        ],
+                        "AssociatePublicIpAddress": "true",
+                        "DeviceIndex": "0",
+                        "DeleteOnTermination": "true",
+                        "SubnetId": { "Fn::FindInMap" : [ "ZoneToSubnet", { "Ref" : "Zone" }, "SubnetId" ]}
+                    }
+                ],
+                "KeyName": {
+                    "Ref": "KeyName"
+                },
+                "UserData": {
+                    "Fn::Base64": {
+                        "Fn::Join": ["", [
+                            "#!/bin/bash\n",
+                            "yum update -y aws-cfn-bootstrap\n",
+
+                            "function error_exit\n",
+                            "{\n",
+                            "  /opt/aws/bin/cfn-signal -e 1 -r \"$1\" '", {
+                                "Ref": "WaitHandle"
+                            }, "'\n",
+                            "  exit 1\n",
+                            "}\n",
+
+                            "/opt/aws/bin/cfn-init -s ", {
+                                "Ref": "AWS::StackName"
+                            }, " -r Ec2Instance ",
+                            "         --region ", {
+                                "Ref": "AWS::Region"
+                            }, " || error_exit 'Failed to initialize Chef Solo'\n",
+                            "bash /var/init/bootstrap.sh > /var/init/bootstrap.log 2>&1\n",
+                            "chef-solo -j /var/init/node.json --config /var/init/solo.rb --node-name ",
+                            {
+                                "Ref": "AWS::StackName"
+                            },
+                            " > /var/init/chef_solo.log 2>&1\n",
+                            "/opt/aws/bin/cfn-signal -e $? '", {
+                                "Ref": "WaitHandle"
+                            }, "'\n"
+                        ]]
+                    }
+                }
+
+            }
+
+        },
+
+        "publicDNS": {
+            "Type": "AWS::Route53::RecordSet",
+            "Properties": {
+                "HostedZoneName": "keboola.com.",
+                "Comment": "DNS name for instance.",
+                "Name": {
+                    "Fn::Join": [ "", [
+                        {
+                            "Ref": "AWS::StackName"
+                        },
+                        ".keboola.com"
+                    ] ]
+                },
+                "Type": "A",
+                "TTL": "900",
+                "ResourceRecords": [
+                    {
+                        "Fn::GetAtt": [ "Ec2Instance", "PublicIp" ]
+                    }
+                ]
+            }
+        },
+
+        "WaitHandle": {
+            "Type": "AWS::CloudFormation::WaitConditionHandle"
+        },
+
+        "WaitCondition": {
+            "Type": "AWS::CloudFormation::WaitCondition",
+            "DependsOn": "Ec2Instance",
+            "Properties": {
+                "Handle": {
+                    "Ref": "WaitHandle"
+                },
+                "Timeout": "1800"
+            }
+        }
+    },
+    "Outputs": {
+        "Instance": {
+            "Value": {
+                "Fn::GetAtt": [ "Ec2Instance", "PublicDnsName" ]
+            },
+            "Description": "DNS Name of the newly created EC2 instance"
+        }
+    }
+}

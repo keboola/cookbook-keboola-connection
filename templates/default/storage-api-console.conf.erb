@@ -1,0 +1,60 @@
+<VirtualHost *:80>
+    ServerName <%= @params[:server_name] %>
+    ServerAlias <% @params[:server_aliases].each do |a| %><%= a %> <% end %>
+
+    DocumentRoot /www/storage-api-console
+
+    ErrorLog "|/usr/bin/logger -t 'apache_<%= @params[:server_name] %>_err' -p local1.info"
+    CustomLog "|/usr/bin/logger -t 'apache_<%= @params[:server_name] %>' -p local1.info" combined
+
+    RewriteEngine On
+    # force ssl
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteRule !/status https://%{HTTP_HOST}%{REQUEST_URI} [L,R]
+
+     <Directory /www/storage-api-console>
+        AllowOverride All
+	Require all granted
+        RewriteEngine On
+        RewriteCond %{REQUEST_FILENAME} -s [OR]
+        RewriteCond %{REQUEST_FILENAME} -l [OR]
+        RewriteCond %{REQUEST_FILENAME} -d
+        RewriteRule ^.*$ - [NC,L]
+        RewriteRule ^.*$ /index.php [NC,L]
+    </Directory>
+
+</VirtualHost>
+
+<VirtualHost *:443>
+    ServerName <%= @params[:server_name] %>
+    ServerAlias <% @params[:server_aliases].each do |a| %><%= a %> <% end %>
+
+    DocumentRoot /www/storage-api-console
+
+    ErrorLog "|/usr/bin/logger -t 'apache_<%= @params[:server_name] %>_err' -p local1.info"
+    CustomLog "|/usr/bin/logger -t 'apache_<%= @params[:server_name] %>' -p local1.info" combined
+
+    RewriteEngine On
+
+     <Directory /www/storage-api-console>
+        AllowOverride All
+        Require all granted
+	DirectoryIndex index.php
+        RewriteEngine On
+        RewriteCond %{REQUEST_FILENAME} -s [OR]
+        RewriteCond %{REQUEST_FILENAME} -l [OR]
+        RewriteCond %{REQUEST_FILENAME} -d
+        RewriteRule ^.*$ - [NC,L]
+        RewriteRule ^.*$ /index.php [NC,L]
+    </Directory>
+
+  SSLEngine on
+    SSLProtocol all -SSLv2
+    SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM:+LOW
+    SSLCertificateFile /etc/httpd/ssl/x.keboola.com.crt
+    SSLCertificateKeyFile /etc/httpd/ssl/x.keboola.com.key
+    SSLCACertificateFile /etc/httpd/ssl/rapidssl.intermediate.ca
+    SetEnvIf User-Agent ".*MSIE.*" nokeepalive ssl-unclean-shutdown downgrade-1.0 force-response-1.0
+
+
+</VirtualHost>
