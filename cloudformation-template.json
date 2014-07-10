@@ -5,8 +5,8 @@
         "InstanceType": {
             "Description": "WebServer EC2 instance type",
             "Type": "String",
-            "Default": "t1.micro",
-            "AllowedValues": [ "t1.micro", "m1.small", "m1.medium", "m3.medium", "m3.large", "m1.large", "m1.xlarge", "m3.xlarge", "m3.2xlarge", "m2.xlarge", "m2.2xlarge", "m2.4xlarge", "c1.medium", "c1.xlarge", "cc1.4xlarge", "cc2.8xlarge", "cg1.4xlarge", "hi1.4xlarge", "hs1.8xlarge"],
+            "Default": "c3.large",
+            "AllowedValues": [ "t1.micro", "m1.small", "m1.medium", "m3.medium", "m3.large", "c3.large", "m1.large", "m1.xlarge", "m3.xlarge", "m3.2xlarge", "m2.xlarge", "m2.2xlarge", "m2.4xlarge", "c1.medium", "c1.xlarge", "cc1.4xlarge", "cc2.8xlarge", "cg1.4xlarge", "hi1.4xlarge", "hs1.8xlarge"],
             "ConstraintDescription": "must be a valid EC2 instance type."
         },
         "SecurityGroupVpcId": {
@@ -14,7 +14,7 @@
             "Type": "String",
             "MinLength": 2,
             "MaxLength": 255,
-            "Default": "sg-8f9c8aed"
+            "Default": "sg-bd1cc3d2"
         },
         "Zone": {
             "Description": "Run instance in zone A or B",
@@ -96,6 +96,9 @@
                 "Arch": "PV64"
             },
             "c1.xlarge": {
+                "Arch": "PV64"
+            },
+            "c3.large": {
                 "Arch": "PV64"
             },
             "cc1.4xlarge": {
@@ -193,7 +196,7 @@
                         "files": {
                             "/var/init/node.json": {
                                 "content": {
-                                    "run_list": [ "recipe[keboola-storage-api-console]"],
+                                    "run_list": [ "recipe[keboola-connection]"],
                                     "papertrail": {
                                         "port": {
                                             "Ref": "PapertrailPort"
@@ -245,13 +248,13 @@
                             "/var/init/bootstrap.sh": {
                                 "content": {
                                     "Fn::Join": ["\n", [
-                                        "curl -# -L -k -o /tmp/cookbook-keboola-storage-api-console-master.tar.gz https://github.com/keboola/cookbook-keboola-storage-api-console/archive/master.tar.gz",
+                                        "curl -# -L -k -o /tmp/cookbook-keboola-connection.tar.gz https://github.com/keboola/cookbook-keboola-connection/archive/master.tar.gz",
                                         "curl https://opscode-omnibus-packages.s3.amazonaws.com/el/6/x86_64/chefdk-0.1.0-1.el6.x86_64.rpm > /tmp/chefdk.rpm",
                                         "rpm -i /tmp/chefdk.rpm",
-                                        "mkdir -p /var/chef/cookbooks/keboola-storage-api-console",
-                                        "tar --strip 1 -C /var/chef/cookbooks/keboola-storage-api-console -xf /tmp/cookbook-keboola-storage-api-console-master.tar.gz",
+                                        "mkdir -p /var/chef/cookbooks/keboola-connection",
+                                        "tar --strip 1 -C /var/chef/cookbooks/keboola-connection -xf /tmp/cookbook-keboola-storage-api-console-master.tar.gz",
                                         "export HOME=/root",
-                                        "cd /var/chef/cookbooks/keboola-storage-api-console && /usr/bin/berks vendor /var/chef/berks-cookbooks/"
+                                        "cd /var/chef/cookbooks/keboola-connection && /usr/bin/berks vendor /var/chef/berks-cookbooks/"
                                     ]]
                                 },
                                 "mode": "000644",
