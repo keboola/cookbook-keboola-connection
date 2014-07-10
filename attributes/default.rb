@@ -13,5 +13,5 @@ default['apache']['default_modules'] = %w[
   dir env mime negotiation setenvif
 ]
 
-default['php']['packages'] = %w{ php55 php-pear } 
 
+default['php']['packages'] = %w{ php55 php-pear php55-opcache php55-pdo php55-mcrypt php55-pgsql }

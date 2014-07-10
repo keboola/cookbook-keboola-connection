@@ -151,7 +151,8 @@
                                     "Resource": [
                                         "arn:aws:s3:::kbc-uis/storage-api-console/*",
                                         "arn:aws:s3:::keboola-configs/certificates/*",
-                                        "arn:aws:s3:::keboola-configs/deploy-keys/*"
+                                        "arn:aws:s3:::keboola-configs/deploy-keys/*",
+                                        "arn:aws:s3:::keboola-configs/connection/*"
                                     ]
                                 }
                             ]

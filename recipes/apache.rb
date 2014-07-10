@@ -34,7 +34,7 @@ apache_module 'ssl' do
 end
 
 apache_default_template = resources(:template => "apache2.conf")
-apache_default_template.cookbook "keboola-storage-api-console"
+apache_default_template.cookbook "keboola-connection"
 
 aws_s3_file "/tmp/ssl-keboola.com.tar.gz" do
   bucket "keboola-configs"
