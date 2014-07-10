@@ -4,6 +4,7 @@ file "#{node['apache']['dir']}/conf.d/autoindex.conf" do
   backup false
 end
 
+include_recipe "apache2"
 
 unless node['apache']['listen_ports'].include?('443')
   node.set['apache']['listen_ports'] = node['apache']['listen_ports'] + ['443']

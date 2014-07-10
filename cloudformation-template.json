@@ -151,7 +151,7 @@
                                     "Resource": [
                                         "arn:aws:s3:::kbc-uis/storage-api-console/*",
                                         "arn:aws:s3:::keboola-configs/certificates/*",
-                                        "arn:aws:S3:::keboola-configs/deploy-keys/*"
+                                        "arn:aws:s3:::keboola-configs/deploy-keys/*"
                                     ]
                                 }
                             ]
@@ -252,7 +252,7 @@
                                         "curl https://opscode-omnibus-packages.s3.amazonaws.com/el/6/x86_64/chefdk-0.1.0-1.el6.x86_64.rpm > /tmp/chefdk.rpm",
                                         "rpm -i /tmp/chefdk.rpm",
                                         "mkdir -p /var/chef/cookbooks/keboola-connection",
-                                        "tar --strip 1 -C /var/chef/cookbooks/keboola-connection -xf /tmp/cookbook-keboola-storage-api-console-master.tar.gz",
+                                        "tar --strip 1 -C /var/chef/cookbooks/keboola-connection -xf /tmp/cookbook-keboola-connection.tar.gz",
                                         "export HOME=/root",
                                         "cd /var/chef/cookbooks/keboola-connection && /usr/bin/berks vendor /var/chef/berks-cookbooks/"
                                     ]]
