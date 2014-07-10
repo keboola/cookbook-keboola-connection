@@ -6,6 +6,8 @@ end
 
 include_recipe "apache2"
 
+
+
 unless node['apache']['listen_ports'].include?('443')
   node.set['apache']['listen_ports'] = node['apache']['listen_ports'] + ['443']
 end
@@ -33,8 +35,16 @@ apache_module 'ssl' do
   conf true
 end
 
+apache_module 'alias' do
+  conf true
+end
+
 apache_default_template = resources(:template => "apache2.conf")
 apache_default_template.cookbook "keboola-connection"
+
+
+
+
 
 aws_s3_file "/tmp/ssl-keboola.com.tar.gz" do
   bucket "keboola-configs"

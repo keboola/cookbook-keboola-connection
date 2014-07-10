@@ -1,0 +1,73 @@
+<VirtualHost *:80>
+   ServerName <%= @params[:server_name] %>
+   ServerAlias <% @params[:server_aliases].each do |a| %><%= a %> <% end %>
+
+   Redirect 301 / https://connection.keboola.com/
+</VirtualHost>
+
+<VirtualHost *:443>
+
+    ServerName <%= @params[:server_name] %>
+    ServerAlias <% @params[:server_aliases].each do |a| %><%= a %> <% end %>
+
+    DocumentRoot /www/connection/current/public
+
+    ErrorLog "|/usr/bin/logger -t 'apache_ssl_connection.keboola.com_err' -p local1.info"
+    CustomLog "|/usr/bin/logger -t 'apache_ssl_connection.keboola.com' -p local1.info" combined
+
+    SetEnv APPLICATION_ENV "production"
+
+    RewriteEngine On
+    # force ssl
+    #RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    #RewriteRule !/status https://%{HTTP_HOST}%{REQUEST_URI} [L,R]
+
+
+    # maintenance mode
+    ErrorDocument 503 /maintenance/maintenance.php
+    RewriteCond %{REQUEST_URI} !.(css|gif|jpg|png)$
+    RewriteCond %{HTTP_HOST} !connection-maintenance.keboola.com
+    RewriteCond %{DOCUMENT_ROOT}/maintenance/maintenance.php -f
+    RewriteCond %{SCRIPT_FILENAME} !maintenance/maintenance.php
+    RewriteRule ^.*$  -  [redirect=503,last]
+
+    php_value short_open_tag 1
+    php_value include_path .:/www/connection/:/usr/share/php
+    php_admin_value error_log syslog
+    php_admin_flag display_startup_errors off
+    php_admin_flag log_errors on
+    php_admin_flag display_errors off
+    php_admin_value error_reporting 30719
+    php_value post_max_size 2048M
+    php_value upload_max_filesize  2048M
+
+    KeepAlive on
+
+    DeflateBufferSize 16192
+    DeflateCompressionLevel 1
+
+    <Directory /www/connection/current/public>
+        Require all granted
+        AllowOverride None
+        RewriteEngine On
+        RewriteCond %{REQUEST_FILENAME} -s [OR]
+        RewriteCond %{REQUEST_FILENAME} -l [OR]
+        RewriteCond %{REQUEST_FILENAME} -d
+        RewriteRule ^.*$ - [NC,L]
+        RewriteRule ^.*$ /index.php [NC,L]
+
+        SetOutputFilter DEFLATE
+        AddOutputFilterByType DEFLATE text/html text/plain text/xml application/json text/javascript
+    </Directory>
+
+  SSLEngine on
+    SSLProtocol all -SSLv2
+    SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM:+LOW
+    SSLCertificateFile /etc/httpd/ssl/x.keboola.com.crt
+    SSLCertificateKeyFile /etc/httpd/ssl/x.keboola.com.key
+    SSLCACertificateFile /etc/httpd/ssl/rapidssl.intermediate.ca
+    SetEnvIf User-Agent ".*MSIE.*" nokeepalive ssl-unclean-shutdown downgrade-1.0 force-response-1.0
+
+
+
+</VirtualHost>

@@ -9,7 +9,13 @@ include_recipe "keboola-connection::php"
 include_recipe "keboola-connection::apache"
 include_recipe "keboola-common"
 
+# tools required for build
+include_recipe "nodejs"
 package "ant"
+
+execute "npm modules" do
+  command "npm install -g bower grunt-cli"
+end
 
 
 aws_s3_file "/root/.ssh/kbc_id_rsa" do
@@ -37,6 +43,7 @@ directory "/www/connection" do
   mode 00555
   action :create
 end
+
 
 directory "/www/connection/releases" do
   owner "root"
@@ -80,13 +87,36 @@ git "/www/connection/releases/#{time}" do
    group "root"
 end
 
+
+execute "build connection" do
+  cwd "/www/connection/releases/#{time}"
+  command "ant update"
+end
+
 execute "chown-data-www" do
   command "chown -R deploy:apache /www/connection/releases/#{time}"
   action :run
 end
 
-execute "build connection" do
-  cwd "/www/connection/releases/#{time}"
-  command "ant update"
+directory "/www/connection/releases/#{time}/cache" do
+	mode "0775"
+end
+
+link "/www/connection/releases/#{time}/application/configs/config.ini" do
+  to "/www/connection/shared/application/configs/config.ini"
   user "deploy"
+  group "apache"
+end
+
+link "/www/connection/current" do
+  to "/www/connection/releases/#{time}"
+  user "deploy"
+  group "apache"
+end
+
+web_app "#{node['fqdn']}" do
+  template "connection.keboola.com.conf.erb"
+  server_name node['fqdn']
+  server_aliases [node['hostname'], 'connection.keboola.com']
+  enable true
 end

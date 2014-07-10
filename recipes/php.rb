@@ -11,3 +11,11 @@ template "#{node['php']['ext_conf_dir']}/opcache.ini" do
     notifies :restart, "service[#{svc}]"
   end
 end
+
+
+template "#{node['php']['ext_conf_dir']}/apcu.ini" do
+  source 'apcu.ini.erb'
+  owner 'root'
+  group 'root'
+  mode 00644
+end
