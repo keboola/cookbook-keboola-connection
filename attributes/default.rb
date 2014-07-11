@@ -14,7 +14,7 @@ default['apache']['default_modules'] = %w[
 ]
 
 
-default['php']['packages'] = %w{ php55 php-pear php55-opcache php55-pdo php55-mysqlnd php55-pgsql php55-mcrypt php55-pecl-apcu }
+default['php']['packages'] = %w{ php54 php-pear php54-opcache php54-pdo php54-mysqlnd php54-pgsql php54-mcrypt php54-pecl-apc }
 
 
 default['nodejs']['install_method'] = 'binary'

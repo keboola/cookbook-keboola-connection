@@ -13,8 +13,8 @@ template "#{node['php']['ext_conf_dir']}/opcache.ini" do
 end
 
 
-template "#{node['php']['ext_conf_dir']}/apcu.ini" do
-  source 'apcu.ini.erb'
+template "#{node['php']['ext_conf_dir']}/apc.ini" do
+  source 'apc.ini.erb'
   owner 'root'
   group 'root'
   mode 00644
