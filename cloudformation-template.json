@@ -264,7 +264,6 @@
                             "/var/init/bootstrap.sh": {
                                 "content": {
                                     "Fn::Join": ["\n", [
-                                        "umount /media/ephemeral0/; echo y | mdadm -C /dev/md0 --level=raid0 --raid-devices=2 /dev/xvdb /dev/xvdc ; mkfs.xfs /dev/md0; mount /dev/md0 /media/ephemeral0/",
                                         "curl -# -L -k -o /tmp/cookbook-keboola-connection.tar.gz https://github.com/keboola/cookbook-keboola-connection/archive/master.tar.gz",
                                         "curl https://opscode-omnibus-packages.s3.amazonaws.com/el/6/x86_64/chefdk-0.1.0-1.el6.x86_64.rpm > /tmp/chefdk.rpm",
                                         "rpm -i /tmp/chefdk.rpm",
@@ -272,6 +271,26 @@
                                         "tar --strip 1 -C /var/chef/cookbooks/keboola-connection -xf /tmp/cookbook-keboola-connection.tar.gz",
                                         "export HOME=/root",
                                         "cd /var/chef/cookbooks/keboola-connection && /usr/bin/berks vendor /var/chef/berks-cookbooks/"
+                                    ]]
+                                },
+                                "mode": "000644",
+                                "owner": "root",
+                                "group": "wheel"
+                            },
+                            "/var/init/storage.sh": {
+                                "content": {
+                                    "Fn::Join": ["\n", [
+                                        "umount /media/ephemeral0/; echo y | mdadm -C /dev/md0 --level=raid0 --raid-devices=2 /dev/xvdb /dev/xvdc ; mkfs.xfs /dev/md0; mount /dev/md0 /media/ephemeral0/",
+                                        "mkdir /media/ephemeral0/tmp",
+                                        "chmod a+xw /media/ephemeral0/tmp/",
+                                        "chmod +t /media/ephemeral0/tmp/",
+                                        "mount -o,bind /media/ephemeral0/tmp/ /tmp",
+                                        "dd if=/dev/zero of=/media/ephemeral0/swap1.bin count=10000 bs=102400",
+                                        "mkswap /media/ephemeral0/swap1.bin",
+                                        "swapon /media/ephemeral0/swap1.bin",
+                                        "dd if=/dev/zero of=/media/ephemeral0/swap2.bin count=10000 bs=102400",
+                                        "mkswap /media/ephemeral0/swap2.bin",
+                                        "swapon /media/ephemeral0/swap2.bin"
                                     ]]
                                 },
                                 "mode": "000644",
@@ -356,6 +375,7 @@
                             "         --region ", {
                                 "Ref": "AWS::Region"
                             }, " || error_exit 'Failed to initialize Chef Solo'\n",
+                            "bash /var/init/storage.sh > /var/init/storage.log 2>&1\n",
                             "bash /var/init/bootstrap.sh > /var/init/bootstrap.log 2>&1\n",
                             "export HOME=/root",
                             "chef-solo -j /var/init/node.json --config /var/init/solo.rb --node-name ",
