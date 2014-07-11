@@ -52,6 +52,21 @@
             "Type": "String",
             "MinLength": 2,
             "MaxLength": 255
+        },
+        "WorkersEventsCount": {
+            "Description": "Event queue workers count",
+            "Type": "Number",
+            "Default": 0
+        },
+        "WorkersMainCount": {
+            "Description": "Main queue workers count",
+            "Type": "Number",
+            "Default": 0
+        },
+        "WorkersMainFastCount": {
+            "Description": "Main fast queue workers count",
+            "Type": "Number",
+            "Default": 0
         }
     },
     "Mappings": {
