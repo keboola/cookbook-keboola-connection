@@ -264,6 +264,7 @@
                             "/var/init/bootstrap.sh": {
                                 "content": {
                                     "Fn::Join": ["\n", [
+                                        "umount /media/ephemeral0/; echo y | mdadm -C /dev/md0 --level=raid0 --raid-devices=2 /dev/xvdb /dev/xvdc ; mkfs.xfs /dev/md0; mount /dev/md0 /media/ephemeral0/",
                                         "curl -# -L -k -o /tmp/cookbook-keboola-connection.tar.gz https://github.com/keboola/cookbook-keboola-connection/archive/master.tar.gz",
                                         "curl https://opscode-omnibus-packages.s3.amazonaws.com/el/6/x86_64/chefdk-0.1.0-1.el6.x86_64.rpm > /tmp/chefdk.rpm",
                                         "rpm -i /tmp/chefdk.rpm",
