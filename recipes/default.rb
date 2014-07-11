@@ -88,9 +88,15 @@ git "/www/connection/releases/#{time}" do
 end
 
 
+
 execute "build connection" do
   cwd "/www/connection/releases/#{time}"
   command "ant update"
+end
+
+execute "create revision file" do
+  cwd "/www/connection/releases/#{time}"
+  command "git rev-parse HEAD > REVISION"
 end
 
 execute "chown-data-www" do
