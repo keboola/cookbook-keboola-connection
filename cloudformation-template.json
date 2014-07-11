@@ -341,6 +341,7 @@
                                 "Ref": "AWS::Region"
                             }, " || error_exit 'Failed to initialize Chef Solo'\n",
                             "bash /var/init/bootstrap.sh > /var/init/bootstrap.log 2>&1\n",
+                            "export HOME=/root",
                             "chef-solo -j /var/init/node.json --config /var/init/solo.rb --node-name ",
                             {
                                 "Ref": "AWS::StackName"
