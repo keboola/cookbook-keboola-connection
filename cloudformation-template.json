@@ -116,6 +116,9 @@
             "c3.large": {
                 "Arch": "PV64"
             },
+            "c3.xlarge": {
+                "Arch": "PV64"
+            },
             "cc1.4xlarge": {
                 "Arch": "CLU64"
             },
