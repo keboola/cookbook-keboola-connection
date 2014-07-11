@@ -126,3 +126,10 @@ web_app "#{node['fqdn']}" do
   server_aliases [node['hostname'], 'connection.keboola.com']
   enable true
 end
+
+template "/etc/init/connection.queue-receive.conf" do
+  source 'connection.queue-receive.conf.erb'
+  owner 'root'
+  group 'root'
+  mode 00644
+end
