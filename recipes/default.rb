@@ -36,26 +36,32 @@ cookbook_file "/root/.ssh/config" do
   group "root"
 end
 
-
-directory "/www/connection" do
-  owner "root"
-  group "root"
-  mode 00555
-  action :create
+cookbook_file "/home/deploy/.ssh/config" do
+  source "ssh_config_deploy"
+  mode "0600"
+  owner "deploy"
+  group "apache"
 end
 
 
+directory "/www/connection" do
+  owner "deploy"
+  group "apache"
+  mode 00755
+  action :create
+end
+
 directory "/www/connection/releases" do
-  owner "root"
-  group "root"
-  mode 00555
+  owner "deploy"
+  group "apache"
+  mode 0755
   action :create
 end
 
 directory "/www/connection/shared" do
-  owner "root"
-  group "root"
-  mode 00555
+  owner "deploy"
+  group "apache"
+  mode 00755
   action :create
 end
 
@@ -116,7 +122,7 @@ end
 
 link "/www/connection/current" do
   to "/www/connection/releases/#{time}"
-  user "deploy"
+  owner "deploy"
   group "apache"
 end
 
