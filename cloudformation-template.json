@@ -288,6 +288,22 @@
                 "InstanceType": {
                     "Ref": "InstanceType"
                 },
+                "BlockDeviceMappings": [
+                    {
+                        "DeviceName": "/dev/sda1",
+                        "Ebs" : {
+                            "VolumeType": "gp2"
+                        }
+                    },
+                    {
+                        "DeviceName":"/dev/sdb",
+                        "VirtualName" : "ephemeral0"
+                    },
+                    {
+                        "DeviceName": "/dev/sdc",
+                        "VirtualName" : "ephemeral1"
+                    }
+                ],
                 "NetworkInterfaces": [
                     {
                         "GroupSet": [
