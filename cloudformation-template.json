@@ -380,7 +380,7 @@
                             }, " || error_exit 'Failed to initialize Chef Solo'\n",
                             "bash /var/init/storage.sh > /var/init/storage.log 2>&1\n",
                             "bash /var/init/bootstrap.sh > /var/init/bootstrap.log 2>&1\n",
-                            "export HOME=/root",
+                            "export HOME=/root\n",
                             "chef-solo -j /var/init/node.json --config /var/init/solo.rb --node-name ",
                             {
                                 "Ref": "AWS::StackName"
