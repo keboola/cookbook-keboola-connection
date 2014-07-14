@@ -9,15 +9,15 @@ Cloudformation template is also provided with cookbook and performs these action
 
 Usage
 -----
-#### keboola-storage-api-console::default
+#### keboola-connection::default
 
-Just include `keboola-storage-api-console` in your node's `run_list`:
+Just include `keboola-connection` in your node's `run_list`:
 
 ```json
 {
   "name":"my_node",
   "run_list": [
-    "recipe[keboola-storage-api-console]"
+    "recipe[keboola-connection]"
   ]
 }
 ```
