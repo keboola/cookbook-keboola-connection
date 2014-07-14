@@ -9,6 +9,12 @@ include_recipe "keboola-connection::php"
 include_recipe "keboola-connection::apache"
 include_recipe "keboola-common"
 
+# required for mysql exports using command line
+package "mysql-common"
+package "mysql55"
+
+
+
 # tools required for build
 include_recipe "nodejs"
 package "ant"

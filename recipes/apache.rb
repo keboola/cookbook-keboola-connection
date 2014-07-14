@@ -42,9 +42,8 @@ end
 apache_default_template = resources(:template => "apache2.conf")
 apache_default_template.cookbook "keboola-connection"
 
-
-
-
+apache_sysconfig_template = resources(:template => "/etc/sysconfig/httpd")
+apache_sysconfig_template.cookbook "keboola-connection"
 
 aws_s3_file "/tmp/ssl-keboola.com.tar.gz" do
   bucket "keboola-configs"
