@@ -4,6 +4,7 @@ default['aws']['aws_access_key_id'] = ''
 default['aws']['aws_secret_access_key'] = ''
 
 default['postfix']['main']['smtp_sasl_password_maps'] = 'static:'
+default['postfix']['main']['transport_maps'] = nil
 
 
 default['apache']['user'] = 'apache'
