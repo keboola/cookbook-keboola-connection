@@ -145,3 +145,5 @@ template "/etc/init/connection.queue-receive.conf" do
   group 'root'
   mode 00644
 end
+
+include_recipe "keboola-connection::workers"

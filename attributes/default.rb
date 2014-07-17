@@ -1,5 +1,9 @@
 
 
+default['keboola-connection']['workers']['eventsElastic'] = 0
+default['keboola-connection']['workers']['main'] = 0
+default['keboola-connection']['workers']['main_fast'] = 0
+
 default['aws']['aws_access_key_id'] = ''
 default['aws']['aws_secret_access_key'] = ''
 

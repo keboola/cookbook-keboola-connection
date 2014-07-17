@@ -248,6 +248,13 @@
                                                 }
                                             ]]}
                                         }
+                                    },
+                                    "keboola-connection": {
+                                        "workers": {
+                                            "eventsElastic": { "Ref": "WorkersEventsCount"},
+                                            "main": { "Ref": "WorkersMainCount"},
+                                            "main_fast": { "Ref": "WorkersMainFastCount"}
+                                        }
                                     }
                                 },
                                 "mode": "000644",
