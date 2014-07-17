@@ -8,7 +8,7 @@ This cookbook installs Keboola Connection with all it's dependencies.
 
 Running instance
 ----------------
-Launch cloudformation template in Cloudformation AWS console. After filling few required parameters instance will be up and running latest version of Keboola Connection server.
+Launch [Cloudformation template](cloudformation-template.json) in Cloudformation AWS console. After filling few required parameters instance will be up and running latest version of Keboola Connection server.
 
 
 Troubleshooting
