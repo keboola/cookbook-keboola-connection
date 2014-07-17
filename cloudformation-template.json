@@ -67,6 +67,13 @@
             "Description": "Main fast queue workers count",
             "Type": "Number",
             "Default": 0
+        },
+        "EnableCron": {
+            "Description": "Start token expirator and old Twitter crons",
+            "Type": "Number",
+            "MinValue": 0,
+            "MaxValue": 1,
+            "Default": 0
         }
     },
     "Mappings": {
@@ -254,6 +261,9 @@
                                             "eventsElastic": { "Ref": "WorkersEventsCount"},
                                             "main": { "Ref": "WorkersMainCount"},
                                             "main_fast": { "Ref": "WorkersMainFastCount"}
+                                        },
+                                        "enable_cron": {
+                                            "Ref": "EnableCron"
                                         }
                                     }
                                 },

@@ -147,3 +147,4 @@ template "/etc/init/connection.queue-receive.conf" do
 end
 
 include_recipe "keboola-connection::workers"
+include_recipe "keboola-connection::cron"
