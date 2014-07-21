@@ -8,6 +8,7 @@ include_recipe "aws"
 include_recipe "keboola-connection::php"
 include_recipe "keboola-connection::apache"
 include_recipe "keboola-common"
+include_recipe "newrelic::php-agent"
 
 # required for mysql exports using command line
 package "mysql-common"
