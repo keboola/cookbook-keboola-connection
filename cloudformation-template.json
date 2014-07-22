@@ -437,6 +437,20 @@
             }
         },
 
+        "RealtimeRDSIngress": {
+            "Type": "AWS::RDS::DBSecurityGroupIngress",
+            "Properties": {
+                "DBSecurityGroupName": "kbc-sapi",
+                "CIDRIP": { "Fn::Join": [ "", [
+                    {
+                        "Fn::GetAtt": [ "Ec2Instance", "PublicIp" ]
+                    },
+                    "/32"
+                   ] ]
+                }
+            }
+        },
+
         "WaitHandle": {
             "Type": "AWS::CloudFormation::WaitConditionHandle"
         },

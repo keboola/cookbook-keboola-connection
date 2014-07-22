@@ -121,6 +121,10 @@ directory "/www/connection/releases/#{time}/cache" do
 	mode "0775"
 end
 
+directory "/www/connection/releases/#{time}/public/captcha" do
+	mode "0775"
+end
+
 link "/www/connection/releases/#{time}/application/configs/config.ini" do
   to "/www/connection/shared/application/configs/config.ini"
   user "deploy"
