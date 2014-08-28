@@ -50,8 +50,8 @@ KeepAliveTimeout <%= node['apache']['keepalivetimeout'] %>
     MinSpareServers       <%= node['apache']['prefork']['minspareservers'] %>
     MaxSpareServers       <%= node['apache']['prefork']['maxspareservers'] %>
     ServerLimit           <%= node['apache']['prefork']['serverlimit'] %>
-    MaxClients            <%= node['apache']['prefork']['maxclients'] %>
-    MaxRequestsPerChild   <%= node['apache']['prefork']['maxrequestsperchild'] %>
+    MaxRequestWorkers            <%= node['apache']['prefork']['maxclients'] %>
+    MaxConnectionsPerChild   <%= node['apache']['prefork']['maxrequestsperchild'] %>
 </IfModule>
 
 # worker MPM
