@@ -1,3 +1,3 @@
 instance ${QUEUE}-${N}
 respawn
-exec su -s /bin/sh -c 'exec "$0" "$@"' deploy --  /www/connection/current/cli.sh storage:queue:receive $QUEUE
+exec su -s /bin/sh -c 'exec "$0" "$@"' deploy --  /www/connection/current/cli.sh storage:queue:receive $QUEUE $N
