@@ -37,3 +37,13 @@ cron "twitter import-source-tweets" do
   command "/www/connection/current/cli.sh twitter:cron:import-source-tweets --lock >/dev/null 2>&1"
   action action
 end
+
+
+cron "elastic events roll index" do
+  user "deploy"
+  hour "00"
+  minute "00"
+  day "1"
+  command "/www/connection/current/cli.sh storage:elastic-events-roll-index --lock >/dev/null 2>&1"
+  action action
+end
