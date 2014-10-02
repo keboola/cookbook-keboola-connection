@@ -39,9 +39,6 @@ apache_module 'alias' do
   conf true
 end
 
-apache_default_template = resources(:template => "apache2.conf")
-apache_default_template.cookbook "keboola-connection"
-
 apache_sysconfig_template = resources(:template => "/etc/sysconfig/httpd")
 apache_sysconfig_template.cookbook "keboola-connection"
 

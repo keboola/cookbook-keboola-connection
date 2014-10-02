@@ -14,10 +14,11 @@ default['postfix']['main']['transport_maps'] = nil
 
 
 default['apache']['user'] = 'apache'
-default['apache']['package'] = 'httpd24'
+default['apache']['version'] = '2.4'
 default['apache']['default_modules'] = %w[
-  logio auth_basic authn_file authz_groupfile authz_host authz_user
   dir env mime negotiation setenvif
+  tatus alias auth_basic authn_core authn_file authz_core authz_groupfile
+  authz_host authz_user autoindex dir env mime negotiation setenvif logion php5
 ]
 
 default['php']['packages'] = %w{ php54 php54-devel php54-gd php-pear php54-pdo php54-mysqlnd php54-pgsql php54-mcrypt php54-pecl-apc }

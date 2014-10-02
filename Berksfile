@@ -1,5 +1,5 @@
-source "https://api.berkshelf.com"
+source "https://supermarket.getchef.com"
 
 metadata
 
-cookbook 'keboola-common', git: 'git://github.com/keboola/cookbook-keboola-common.git'
+cookbook 'keboola-common', github: 'keboola/cookbook-keboola-common', tag: "0.2.0"

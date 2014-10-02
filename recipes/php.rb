@@ -7,6 +7,8 @@ php_pear "zendopcache" do
   version "7.0.3"
 end
 
+# fixed yum instal php54-pgsql
+package "postgresql9"
 
 template "#{node['php']['ext_conf_dir']}/zendopcache.ini" do
   source 'opcache.ini.erb'
