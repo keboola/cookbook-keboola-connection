@@ -8,7 +8,7 @@ version          '0.1.0'
 
 
 depends 'aws', '~> 2.4.0'
-depends 'apache2', '~> 2.0.0'
 depends 'php', '~> 1.4.6'
 depends 'keboola-common'
+depends 'keboola-apache2'
 depends 'nodejs', '~> 2.1.0'

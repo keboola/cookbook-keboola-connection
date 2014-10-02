@@ -1,3 +1,4 @@
 tmp
 .vagrant
 .idea
+Berksfile.lock
