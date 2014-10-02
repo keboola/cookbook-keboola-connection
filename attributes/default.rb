@@ -9,8 +9,6 @@ default['keboola-connection']['enable_cron'] = false
 default['aws']['aws_access_key_id'] = ''
 default['aws']['aws_secret_access_key'] = ''
 
-default['postfix']['main']['smtp_sasl_password_maps'] = 'static:'
-default['postfix']['main']['transport_maps'] = nil
 
 default['php']['packages'] = %w{ php54 php54-devel php54-gd php-pear php54-pdo php54-mysqlnd php54-pgsql php54-mcrypt php54-pecl-apc }
 
