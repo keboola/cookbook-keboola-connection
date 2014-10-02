@@ -15,10 +15,11 @@ default['postfix']['main']['transport_maps'] = nil
 
 default['apache']['user'] = 'apache'
 default['apache']['version'] = '2.4'
+default['apache']['package'] = 'httpd24'
 default['apache']['default_modules'] = %w[
   dir env mime negotiation setenvif
-  tatus alias auth_basic authn_core authn_file authz_core authz_groupfile
-  authz_host authz_user autoindex dir env mime negotiation setenvif logion php5
+  status alias auth_basic authn_core authn_file authz_core authz_groupfile
+  authz_host authz_user autoindex dir env mime negotiation setenvif logio log_config php5 unixd socache_shmcb filter
 ]
 
 default['php']['packages'] = %w{ php54 php54-devel php54-gd php-pear php54-pdo php54-mysqlnd php54-pgsql php54-mcrypt php54-pecl-apc }
@@ -32,3 +33,5 @@ default['nodejs']['checksum_linux_arm-pi'] = '561ec2ebfe963be8d6129f82a7d1bc112f
 default['nodejs']['dir'] = '/usr'
 
 default['newrelic']['php_agent']['config_file'] = "/etc/php.d/newrelic.ini"
+
+

@@ -4,8 +4,15 @@ file "#{node['apache']['dir']}/conf.d/autoindex.conf" do
   backup false
 end
 
+user "apache" do
+  gid "apache"
+end
+
 include_recipe "apache2"
 
+# apache2 cookbook fix (runs service[packageName] -> httpd24)
+r = resources(service: 'apache2')
+r.service_name('httpd')
 
 
 unless node['apache']['listen_ports'].include?('443')
@@ -33,13 +40,11 @@ end
 
 apache_module 'ssl' do
   conf true
+  cookbook 'apache2'
 end
 
-apache_module 'alias' do
-  conf true
-end
 
-apache_sysconfig_template = resources(:template => "/etc/sysconfig/httpd")
+apache_sysconfig_template = resources(:template => "/etc/sysconfig/#{node['apache']['package']}")
 apache_sysconfig_template.cookbook "keboola-connection"
 
 aws_s3_file "/tmp/ssl-keboola.com.tar.gz" do
