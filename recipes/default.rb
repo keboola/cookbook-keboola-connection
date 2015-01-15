@@ -82,15 +82,7 @@ directory "/www/connection/shared/application/configs" do
   action :create
 end
 
-aws_s3_file "/www/connection/releases/#{time}/application/configs/config.ini" do
-  bucket "keboola-configs"
-  remote_path "connection/config.ini"
-  aws_access_key_id node[:aws][:aws_access_key_id]
-  aws_secret_access_key node[:aws][:aws_secret_access_key]
-  owner "deploy"
-  group "apache"
-  mode "0555"
-end
+
 
 time = Time.now.to_i
 
@@ -100,6 +92,16 @@ git "/www/connection/releases/#{time}" do
    action :sync
    user "root"
    group "root"
+end
+
+aws_s3_file "/www/connection/releases/#{time}/application/configs/config.ini" do
+  bucket "keboola-configs"
+  remote_path "connection/config.ini"
+  aws_access_key_id node[:aws][:aws_access_key_id]
+  aws_secret_access_key node[:aws][:aws_secret_access_key]
+  owner "deploy"
+  group "apache"
+  mode "0555"
 end
 
 execute "build connection" do
