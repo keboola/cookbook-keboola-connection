@@ -26,6 +26,18 @@ execute "npm modules" do
   command "npm install -g bower grunt-cli"
 end
 
+directory "/home/deploy/.aws" do
+   owner 'deploy'
+   group 'apache'
+end
+
+template "/home/deploy/.aws/credentials" do
+  source 'aws-credentials.erb'
+  owner 'deploy'
+  group 'apache'
+  mode "0600"
+end
+
 
 aws_s3_file "/root/.ssh/kbc_id_rsa" do
   bucket "keboola-configs"
