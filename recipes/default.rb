@@ -82,7 +82,7 @@ directory "/www/connection/shared/application/configs" do
   action :create
 end
 
-aws_s3_file "/www/connection/shared/application/configs/config.ini" do
+aws_s3_file "/www/connection/releases/#{time}/application/configs/config.ini" do
   bucket "keboola-configs"
   remote_path "connection/config.ini"
   aws_access_key_id node[:aws][:aws_access_key_id]
@@ -101,8 +101,6 @@ git "/www/connection/releases/#{time}" do
    user "root"
    group "root"
 end
-
-
 
 execute "build connection" do
   cwd "/www/connection/releases/#{time}"
@@ -125,12 +123,6 @@ end
 
 directory "/www/connection/releases/#{time}/public/captcha" do
 	mode "0775"
-end
-
-link "/www/connection/releases/#{time}/application/configs/config.ini" do
-  to "/www/connection/shared/application/configs/config.ini"
-  user "deploy"
-  group "apache"
 end
 
 link "/www/connection/current" do
