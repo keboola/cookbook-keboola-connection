@@ -10,6 +10,32 @@ include_recipe "keboola-php56"
 include_recipe "keboola-apache2"
 include_recipe "newrelic::php_agent"
 
+
+# ssl certificates for KBC
+aws_s3_file "/tmp/keboola-connection-certificates.tar.gz" do
+  bucket "keboola-configs"
+  remote_path "certificates/keboola-connection-certificates.tar.gz"
+  aws_access_key_id node[:aws][:aws_access_key_id]
+  aws_secret_access_key node[:aws][:aws_secret_access_key]
+end
+
+directory "#{node['apache']['dir']}/ssl" do
+  owner "root"
+  group "root"
+  mode 00644
+  action :create
+end
+
+execute "extract-certificates" do
+  command "tar --strip 1 -C #{node['apache']['dir']}/ssl -xf  /tmp/keboola-connection-certificates.tar.gz"
+  user "root"
+  group "root"
+end
+
+file "/tmp/keboola-connection-certificates.tar.gz" do
+  action :delete
+end
+
 # required for mysql exports using command line
 package "mysql-common"
 package "mysql55"
