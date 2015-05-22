@@ -4,14 +4,18 @@
 
    DocumentRoot /www/connection/current/public
 
-   ErrorLog "|/usr/bin/logger -t 'apache_ssl_connection.keboola.com_err' -p local1.info"
-   CustomLog "|/usr/bin/logger -t 'apache_ssl_connection.keboola.com' -p local1.info" combined
+   ErrorLog "|/usr/bin/logger -t 'apache_connection.keboola.com_err' -p local1.info"
+   CustomLog "|/usr/bin/logger -t 'apache_connection.keboola.com' -p local1.info" combined
 
    SetEnv APPLICATION_ENV "production"
 
    RewriteEngine On
    # force ssl
+   #Bypass ELB-Healthchecker from redirection. It will provide 301 output in the logs, that causes server shows out of service in elb
+   RewriteCond %{HTTP_USER_AGENT} !^ELB-HealthChecker
+   #By using HTTP:X-Forwarded-Proto does not contains HTTPS
    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+   #Request forward option
    RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI}
 
    # maintenance mode
