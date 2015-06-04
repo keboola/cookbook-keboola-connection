@@ -41,19 +41,6 @@ package "mysql55"
 # fixed yum install php54-pgsql
 package "postgresql9"
 
-directory "/home/deploy/.aws" do
-   owner 'deploy'
-   group 'apache'
-end
-
-template "/home/deploy/.aws/credentials" do
-  source 'aws-credentials.erb'
-  owner 'deploy'
-  group 'apache'
-  mode "0600"
-end
-
-
 aws_s3_file "/root/.ssh/kbc_id_rsa" do
   bucket "keboola-configs"
   remote_path "deploy-keys/kbc_id_rsa"
@@ -124,8 +111,6 @@ end
 aws_s3_file "/tmp/connection.tar.gz" do
   bucket "keboola-builds"
   remote_path "connection/connection.tar.gz"
-  aws_access_key_id node[:aws][:aws_access_key_id]
-  aws_secret_access_key node[:aws][:aws_secret_access_key]
 end
 
 execute "extract-connection-app" do
@@ -139,8 +124,6 @@ end
 aws_s3_file "/www/connection/releases/#{time}/application/configs/config.ini" do
   bucket "keboola-configs"
   remote_path "connection/config.ini"
-  aws_access_key_id node[:aws][:aws_access_key_id]
-  aws_secret_access_key node[:aws][:aws_secret_access_key]
   owner "deploy"
   group "apache"
   mode "0555"
