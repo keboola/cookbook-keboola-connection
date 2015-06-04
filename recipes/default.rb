@@ -115,6 +115,15 @@ end
 
 time = Time.now.to_i
 
+directory "/www/connection/releases/#{time}" do
+  owner "deploy"
+  group "apache"
+  recursive true
+  mode 00555
+  action :create
+end
+
+
 
 aws_s3_file "/tmp/connection.tar.gz" do
   bucket "keboola-builds"
@@ -124,9 +133,7 @@ aws_s3_file "/tmp/connection.tar.gz" do
 end
 
 execute "extract-connection-app" do
-  command "tar --strip 1 -C /www/connection/releases/#{time} -xf  /tmp/connection.tar.gz"
-  user "deploy"
-  group "apache"
+  command "tar -C /www/connection/releases/#{time} -xf  /tmp/connection.tar.gz"
 end
 
 aws_s3_file "/www/connection/releases/#{time}/application/configs/config.ini" do
