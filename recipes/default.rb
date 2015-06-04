@@ -39,13 +39,6 @@ package "mysql55"
 # fixed yum install php54-pgsql
 package "postgresql9"
 
-aws_s3_file "/root/.ssh/kbc_id_rsa" do
-  bucket "keboola-configs"
-  remote_path "deploy-keys/kbc_id_rsa"
-  owner "root"
-  group "root"
-  mode "0600"
-end
 
 
 cookbook_file "/root/.ssh/config" do
@@ -121,8 +114,6 @@ end
 
 execute "download config from s3" do
   command "aws s3 cp s3://keboola-configs/connection/config.ini /www/connection/releases/#{time}/application/configs/config.ini"
-  user "deploy"
-  group "apache"
 end
 
 execute "chown-data-www" do
