@@ -136,6 +136,10 @@ execute "extract-connection-app" do
   command "tar -C /www/connection/releases/#{time} -xf  /tmp/connection.tar.gz"
 end
 
+file "/tmp/connection.tar.gz" do
+  action :delete
+end
+
 aws_s3_file "/www/connection/releases/#{time}/application/configs/config.ini" do
   bucket "keboola-configs"
   remote_path "connection/config.ini"
