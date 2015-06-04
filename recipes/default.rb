@@ -43,15 +43,6 @@ package "mysql55"
 # fixed yum install php54-pgsql
 package "postgresql9"
 
-
-# tools required for build
-include_recipe "nodejs"
-package "ant"
-
-execute "npm modules" do
-  command "npm install -g bower grunt-cli"
-end
-
 directory "/home/deploy/.aws" do
    owner 'deploy'
    group 'apache'
@@ -124,12 +115,18 @@ end
 
 time = Time.now.to_i
 
-git "/www/connection/releases/#{time}" do
-   repository "git@github.com:keboola/connection.git"
-   revision "production"
-   action :sync
-   user "root"
-   group "root"
+
+aws_s3_file "/tmp/connection.tar.gz" do
+  bucket "keboola-builds"
+  remote_path "connection/connection.tar.gz"
+  aws_access_key_id node[:aws][:aws_access_key_id]
+  aws_secret_access_key node[:aws][:aws_secret_access_key]
+end
+
+execute "extract-connection-app" do
+  command "tar --strip 1 -C /www/connection/releases/#{time} -xf  /tmp/connection.tar.gz"
+  user "deploy"
+  group "apache"
 end
 
 aws_s3_file "/www/connection/releases/#{time}/application/configs/config.ini" do
@@ -140,16 +137,6 @@ aws_s3_file "/www/connection/releases/#{time}/application/configs/config.ini" do
   owner "deploy"
   group "apache"
   mode "0555"
-end
-
-execute "build connection" do
-  cwd "/www/connection/releases/#{time}"
-  command "ant update"
-end
-
-execute "create revision file" do
-  cwd "/www/connection/releases/#{time}"
-  command "git rev-parse HEAD > REVISION"
 end
 
 execute "chown-data-www" do
