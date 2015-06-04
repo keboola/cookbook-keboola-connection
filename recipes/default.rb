@@ -15,8 +15,6 @@ include_recipe "newrelic::php_agent"
 aws_s3_file "/tmp/keboola-connection-certificates.tar.gz" do
   bucket "keboola-configs"
   remote_path "certificates/keboola-connection-certificates.tar.gz"
-  aws_access_key_id node[:aws][:aws_access_key_id]
-  aws_secret_access_key node[:aws][:aws_secret_access_key]
 end
 
 directory "#{node['apache']['dir']}/ssl" do
@@ -59,8 +57,6 @@ end
 aws_s3_file "/root/.ssh/kbc_id_rsa" do
   bucket "keboola-configs"
   remote_path "deploy-keys/kbc_id_rsa"
-  aws_access_key_id node[:aws][:aws_access_key_id]
-  aws_secret_access_key node[:aws][:aws_secret_access_key]
   owner "root"
   group "root"
   mode "0600"
