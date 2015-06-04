@@ -7,7 +7,6 @@ long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '0.1.0'
 
 
-depends 'aws', '~> 2.4.0'
 depends 'keboola-common'
 depends 'keboola-apache2'
 depends 'keboola-php56'

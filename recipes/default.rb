@@ -4,7 +4,6 @@
 #
 
 
-include_recipe "aws"
 include_recipe "keboola-common"
 include_recipe "keboola-php56"
 include_recipe "keboola-apache2"
@@ -12,9 +11,8 @@ include_recipe "newrelic::php_agent"
 
 
 # ssl certificates for KBC
-aws_s3_file "/tmp/keboola-connection-certificates.tar.gz" do
-  bucket "keboola-configs"
-  remote_path "certificates/keboola-connection-certificates.tar.gz"
+execute "download certificates" do
+  command "aws s3 cp s3://keboola-configs/certificates/keboola-connection-certificates.tar.gz /tmp/keboola-connection-certificates.tar.gz"
 end
 
 directory "#{node['apache']['dir']}/ssl" do
@@ -108,9 +106,8 @@ end
 
 
 
-aws_s3_file "/tmp/connection.tar.gz" do
-  bucket "keboola-builds"
-  remote_path "connection/connection.tar.gz"
+execute "download connection from s3" do
+  command "aws s3 cp s3://keboola-builds/connection/connection.tar.gz /tmp/connection.tar.gz"
 end
 
 execute "extract-connection-app" do
@@ -121,12 +118,11 @@ file "/tmp/connection.tar.gz" do
   action :delete
 end
 
-aws_s3_file "/www/connection/releases/#{time}/application/configs/config.ini" do
-  bucket "keboola-configs"
-  remote_path "connection/config.ini"
-  owner "deploy"
+
+execute "download config from s3" do
+  command "aws s3 cp s3://keboola-configs/connection/config.ini /www/connection/releases/#{time}/application/configs/config.ini"
+  user "deploy"
   group "apache"
-  mode "0555"
 end
 
 execute "chown-data-www" do
