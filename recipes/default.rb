@@ -8,7 +8,7 @@ include_recipe "keboola-common"
 include_recipe "keboola-php56"
 include_recipe "keboola-apache2"
 
-if node['keboola-connection']['enable_newrelic_apm']
+if node['keboola-connection']['enable_newrelic_apm'].to_i > 0
   include_recipe "newrelic::php_agent"
 end
 
