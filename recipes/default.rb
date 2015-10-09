@@ -129,9 +129,6 @@ directory "/www/connection/releases/#{time}/cache" do
 	mode "0775"
 end
 
-directory "/www/connection/releases/#{time}/public/captcha" do
-	mode "0775"
-end
 
 link "/www/connection/current" do
   to "/www/connection/releases/#{time}"
