@@ -39,7 +39,7 @@
 
    KeepAlive on
    # Timeout must be greater than timeout set for AWS ELB
-   KeepAliveTimeout 1800
+   KeepAliveTimeout 320
 
    DeflateBufferSize 16192
    DeflateCompressionLevel 1
@@ -93,6 +93,8 @@
     php_value upload_max_filesize  128M
 
     KeepAlive on
+    # Timeout must be greater than timeout set for AWS ELB
+    KeepAliveTimeout 320
 
     DeflateBufferSize 16192
     DeflateCompressionLevel 1
