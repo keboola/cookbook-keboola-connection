@@ -23,3 +23,18 @@ cron "elastic events roll index" do
   command "/www/connection/current/cli.sh storage:elastic-events-roll-index --lock 2>&1 | /usr/bin/logger -t 'elastic-events-roll-index' -p local1.info"
   action action
 end
+
+cron "publish project metrics" do
+  user "deploy"
+  minute "08"
+  hour "00"
+  command "/www/connection/current/cli.sh storage:publish-projects-stats --lock 2>&1 | /usr/bin/logger -t 'publish-projects-stats' -p local1.info"
+  action action
+end
+
+cron "metrics snapshots" do
+  user "deploy"
+  minute "12"
+  command "/www/connection/current/cli.sh storage:snapshot-project-metrics --lock 2>&1 | /usr/bin/logger -t 'snapshot-project-metrics' -p local1.info"
+  action action
+end
