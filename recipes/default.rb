@@ -80,7 +80,7 @@ end
 
 cookbook_file "/etc/simba.snowflake.ini" do
   source "simba.snowflake.ini"
-  mode "06444"
+  mode "0644"
   owner "root"
   group "root"
 end
