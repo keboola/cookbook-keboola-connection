@@ -44,6 +44,48 @@ package "mysql55"
 package "postgresql9"
 
 
+# snowflake
+
+#odbc support for php 5.6
+execute "install unixodbc" do
+  command "yum -y install unixODBC.x86_64"
+end
+
+execute "install php56-odbc" do
+  command "yum -y install php56-odbc php56-odbc.x86_64"
+end
+
+execute "download snowflake drivers" do
+  command "aws s3 cp s3://keboola-configs/connection/snowflake_linux_x8664_odbc.tgz /tmp/snowflake_linux_x8664_odbc.tgz"
+end
+
+execute "unpack snowflake driver" do
+  command "gunzip /tmp/snowflake_linux_x8664_odbc.tgz"
+end
+
+execute "untar snowflake driver" do
+  command "cd /tmp && tar -xvf snowflake_linux_x8664_odbc.tar"
+end
+
+execute "move snowflake driver" do
+  command "mv /tmp/snowflake_odbc /usr/bin/snowflake_odbc"
+end
+
+cookbook_file "/etc/odbcinst.ini" do
+  source "odbcinst.ini"
+  mode "0644"
+  owner "root"
+  group "root"
+end
+
+cookbook_file "/etc/simba.snowflake.ini" do
+  source "simba.snowflake.ini"
+  mode "06444"
+  owner "root"
+  group "root"
+end
+
+## snowflake end
 
 cookbook_file "/root/.ssh/config" do
   source "ssh_config"
