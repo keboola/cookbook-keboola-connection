@@ -12,8 +12,8 @@ DEPENDENCIES
     metadata: true
   keboola-php56
     git: git://github.com/keboola/cookbook-keboola-php56.git
-    revision: a60f9b721b41d00de9d18d027ec1fb4085b0b797
-    tag: 0.1.6
+    revision: 9b2deee70f778177bd32165554163c90a045a0e1
+    tag: 0.1.7
 
 GRAPH
   apache2 (2.0.0)
@@ -42,7 +42,7 @@ GRAPH
     keboola-common (>= 0.0.0)
     keboola-php56 (>= 0.0.0)
     sysctl (~> 0.6.0)
-  keboola-php56 (0.1.6)
+  keboola-php56 (0.1.7)
     php (~> 1.4.6)
   logrotate (1.9.2)
   monit (0.7.5)
