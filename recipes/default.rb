@@ -56,7 +56,7 @@ execute "install php56-odbc" do
 end
 
 execute "download snowflake drivers" do
-  command "aws s3 cp s3://keboola-configs/connection/snowflake_linux_x8664_odbc.tgz /tmp/snowflake_linux_x8664_odbc.tgz"
+  command "aws s3 cp s3://keboola-configs/drivers/snowflake/snowflake_linux_x8664_odbc.2.12.73.tgz /tmp/snowflake_linux_x8664_odbc.tgz"
 end
 
 execute "unpack snowflake driver" do
@@ -83,6 +83,18 @@ cookbook_file "/etc/simba.snowflake.ini" do
   mode "0644"
   owner "root"
   group "root"
+end
+
+execute "append SIMBAINI variable to profile" do
+  command "echo \"export SIMBAINI=/etc/simba.snowflake.ini\" >> /etc/profile"
+end
+
+execute "append LD_LIBRARY_PATH variable to profile" do
+  command "echo \"export LD_LIBRARY_PATH=/usr/bin/snowflake_odbc/lib\" >> /etc/profile"
+end
+
+execute "append SSL_DIR variable to profile" do
+  command "echo \"export SSL_DIR=/usr/bin/snowflake_odbc/SSLCertificates/nssdb\" >> /etc/profile"
 end
 
 ## snowflake end
