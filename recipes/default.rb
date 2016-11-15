@@ -56,7 +56,7 @@ execute "install php56-odbc" do
 end
 
 execute "download snowflake drivers" do
-  command "aws s3 cp s3://keboola-configs/drivers/snowflake/snowflake_linux_x8664_odbc.2.12.87.tgz /tmp/snowflake_linux_x8664_odbc.tgz"
+  command "aws s3 cp s3://keboola-configs/drivers/snowflake/snowflake_linux_x8664_odbc.2.12.90.tgz /tmp/snowflake_linux_x8664_odbc.tgz"
 end
 
 execute "unpack snowflake driver" do
