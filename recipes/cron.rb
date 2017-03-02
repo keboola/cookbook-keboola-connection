@@ -2,6 +2,13 @@
 
 action = node['keboola-connection']['enable_cron'].to_i > 0 ? :create : :delete
 
+cron "components sync" do
+  user "deploy"
+  command "/www/connection/current/cli.sh storage:sync-components #{node['keboola-connection']['syrup_url']} --lock 2>&1 | /usr/bin/logger -t 'update-backend-stats' -p local1.info"
+  minute "*/5"
+  action action
+end
+
 cron "token expirator" do
   user "deploy"
   command "/www/connection/current/cli.sh storage:token-expirator --lock 2>&1 | /usr/bin/logger -t 'token-expirator' -p local1.info"

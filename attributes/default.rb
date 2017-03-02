@@ -4,6 +4,8 @@ default['keboola-connection']['workers']['eventsElastic'] = 0
 default['keboola-connection']['workers']['main'] = 0
 default['keboola-connection']['workers']['main_fast'] = 0
 
+default['keboola-connection']['syrup_url'] = ''
+
 default['keboola-connection']['enable_cron'] = false
 default['keboola-connection']['enable_newrelic_apm'] = false
 
