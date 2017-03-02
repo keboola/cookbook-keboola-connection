@@ -4,7 +4,7 @@ action = node['keboola-connection']['enable_cron'].to_i > 0 ? :create : :delete
 
 cron "components sync" do
   user "deploy"
-  command "/www/connection/current/cli.sh storage:sync-components #{node['keboola-connection']['syrup_url']} --lock 2>&1 | /usr/bin/logger -t 'update-backend-stats' -p local1.info"
+  command "/www/connection/current/cli.sh storage:sync-components #{node['keboola-connection']['syrup_url']} --lock 2>&1 | /usr/bin/logger -t 'components-sync' -p local1.info"
   minute "*/5"
   action action
 end
