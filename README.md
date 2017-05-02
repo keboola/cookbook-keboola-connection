@@ -1,6 +1,6 @@
-Keboola Connection Cookbook
+Deprecated
 ==============
 
-This cookbook installs Keboola Connection with all it's dependencies.
+Moved to Docker.
 
 
